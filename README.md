@@ -1,3 +1,76 @@
+# Instructions
+1. copy **/public/sw.js** file from public folder into the root directory of your website.   
+2. Update your script to load sambha by copy pasting the script from **/public/script.js** to your script file.   
+
+Add checkbox or any ui button to give option for user to subscribe and unsubscribe the notification. we are giving demo with the example of checkbox.   
+HTML Code for UI.
+``` html
+<input class="notify" type="checkbox" onclick="toggleSubscription()" style="display:none"/>
+```   
+
+script for checkbox controls.   
+```javascript
+// store a reference of a chekbox element into a variable named checkbox.
+var checkbox = document.querySelector('.notify');
+
+var toggleSubscription = function () {
+	if (Gabbar.notificationSettings.isSubscribed) {
+		// unsubscribe user if user is already subscribed.
+		// code snippet 1.
+	} else {
+		// subscribe user if user is not subscribed.
+		// code snippet 2.
+	}
+}
+
+```   
+replace `code snippet 1` with the following code   
+```javascript
+Gabbar.notificationSettings.unsubscribe()
+.then(function() {
+	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+})
+.catch(function(error) {
+	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+});
+```   
+
+replace `code snippet 2` with the following code
+```javascript
+Gabbar.notificationSettings.subscribe()
+.then(function() {
+	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+})
+.catch(function(error) {
+	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+});
+```
+
+**Register A Service Worker on load of Gabbar**   
+```javascript
+Gabbar.onLoad(function() {
+	Gabbar.notificationSettings._registerServiceWorker()
+	.then(success => {
+		checkbox.style.removeProperty('display');
+		checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+	})
+	.catch(error => {
+		console.error(error);
+	});
+});
+```   
+
+# Run & Test
+To test implemented web notification, service worker needs to be registered which can work only on secure websites having ssl certificate example  `https://example.com`. To test on local get a temporary secure link for your localhost by using ngrok service.
+
+1. download `ngrok` in *home directory*
+2. run crm application and web application
+3. open a new terminal change path to home directory, run `$ ./ngrok http <crm's port number>`
+4. copy the temporary secure link and paste it to *.env file's ngrok variable* and *source for loading script in website* `https://example.ngrok.io/gabbar/js/sambha.js`
+5. repeat the step for web app `$ ./ngrok http <web app's port number>`. copy the secure link and open the app via copied link.
+
+**Congratulations you are all set for running and testing web notification. Read the web notification Api given below to better understand the functioning.**
+
 # Web Notification Api
 Web  Notification Settings api combined with sambha, via key named __notificationSettings__ can be accessed by `Gabbar.notificationSettings`.
 
