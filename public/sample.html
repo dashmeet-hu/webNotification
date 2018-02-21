@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sample Code for Web Notification UI</title>
+    </head>
+    <body>
+        <input class="notify" type="checkbox" onclick="toggleSubscription()" style="display:none"/>
+    </body>
+
+    <script src='./script.js'></script>
+    <script>
+        // store a reference of a chekbox element into a variable named checkbox.
+        var checkbox = document.querySelector('.notify');
+
+        var toggleSubscription = function () {
+        	if (Gabbar.notificationSettings.isSubscribed) {
+        		// unsubscribe user if user is already subscribed.
+                Gabbar.notificationSettings.unsubscribe()
+                .then(function() {
+                	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+                })
+                .catch(function(error) {
+                	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+                });
+        	} else {
+        		// subscribe user if user is not subscribed.
+                Gabbar.notificationSettings.subscribe()
+                .then(function() {
+                	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+                })
+                .catch(function(error) {
+                	checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+                });
+        	}
+        }
+
+        Gabbar.onLoad(function() {
+        	Gabbar.notificationSettings._registerServiceWorker()
+        	.then(success => {
+        		checkbox.style.removeProperty('display');
+        		checkbox.checked = Gabbar.notificationSettings.isSubscribed;
+        	})
+        	.catch(error => {
+        		console.error(error);
+        	});
+        });
+    </script>
+</html>
